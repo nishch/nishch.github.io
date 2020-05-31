@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="IntroductionJavaScript is the most widely used programming language, however a large number of programmers keep working with JavaScript without knowing the nuances of it. Inheritance support in JavaSc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Prototypal inheritance in javascript">
+<meta property="og:url" content="https://twistedsoft.com/2015/03/17/prototypal-inheritance/index.html">
+<meta property="og:site_name" content="TwistedSoft">
+<meta property="og:description" content="IntroductionJavaScript is the most widely used programming language, however a large number of programmers keep working with JavaScript without knowing the nuances of it. Inheritance support in JavaSc">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://dl.dropboxusercontent.com/s/x8jp3pj66glq08x/PrototypalInheritance__1_.jpg">
+<meta property="article:published_time" content="2015-03-17T13:30:00.000Z">
+<meta property="article:modified_time" content="2020-05-31T11:43:00.137Z">
+<meta property="article:author" content="Nishant Chaturvedi">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="Prototypal Inheritance">
+<meta property="article:tag" content="Web Developement">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dl.dropboxusercontent.com/s/x8jp3pj66glq08x/PrototypalInheritance__1_.jpg">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Prototypal inheritance in javascript</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="TwistedSoft" type="application/atom+xml" />
+    
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/02/09/tiny-config/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://twistedsoft.com/2015/03/17/prototypal-inheritance/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&text=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&title=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&is_video=false&description=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Prototypal inheritance in javascript&body=Check out this article: https://twistedsoft.com/2015/03/17/prototypal-inheritance/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&title=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&title=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&title=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&title=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&name=Prototypal inheritance in javascript&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&t=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prototypal-Inheritance"><span class="toc-number">2.</span> <span class="toc-text">Prototypal Inheritance</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What’s-the-Deal-with-Internal-Link-“proto“"><span class="toc-number">3.</span> <span class="toc-text">What’s the Deal with Internal Link “proto“?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Creating-Custom-Inheritance-Chain-Using-Objects"><span class="toc-number">4.</span> <span class="toc-text">Creating Custom Inheritance Chain Using Objects</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Using-Constructor-Functions"><span class="toc-number">5.</span> <span class="toc-text">Using Constructor Functions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">6.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Prototypal inheritance in javascript
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">TwistedSoft</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2015-03-17T13:30:00.000Z" itemprop="datePublished">2015-03-17</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>JavaScript is the most widely used programming language, however a large number of programmers keep working with JavaScript without knowing the nuances of it. Inheritance support in JavaScript is another such feature which often confuses programmers who learn JavaScript as their secondary programming language and come from OOP background like C# and Java.</p>
+<p>This post is my effort to elucidate inheritance in JavaScript, how and why it’s useful and all the moving part which make it work, and lastly how to mimic the classical inheritance model in JavaScript.</p>
+<h2 id="Prototypal-Inheritance"><a href="#Prototypal-Inheritance" class="headerlink" title="Prototypal Inheritance"></a>Prototypal Inheritance</h2><p>Functions are the first class objects in JavaScript, what does that mean? It means Functions get special treatment everywhere in the language. Let’s consider a very simple function as shown below:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Animal</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> animal = <span class="keyword">new</span> Animal();</span><br></pre></td></tr></table></figure>
+<p>As simple as the code written above is, it does fairy complex things underneath. “Function” is a global function and every function in JavaScript is an object of “Function” function, yes and that’s not a typo.</p>
+<p>Things which happen after the above piece of code is called can be visualized as shown in the following diagram:</p>
+<p><img src="https://dl.dropboxusercontent.com/s/x8jp3pj66glq08x/PrototypalInheritance__1_.jpg" alt="prototypal inheritance"></p>
+<p>While reading further please keep in mind that,<br>a) All javascript functions have “prototype” property.<br>b) All javascript objects have an internal link “<strong>proto</strong>“ and it refers to that object’s constructor function’s prototype. (Keep reading it will be clear).</p>
+<p>Let’s go through the above diagram in a little more detail.</p>
+<ol>
+<li><code>Animal</code> function object is created.</li>
+<li>Animal gets assigned a property named <em>prototype</em> and a new object is assigned as the value of Animal object’s <em>prototype</em> property, I’ll refer to this object as <code>Animal.prototype</code>.</li>
+<li>Animal.prototype object get a property named <em>constructor</em> which points back to the <em>Animal</em> function object itself.</li>
+<li><code>Animal.prototype</code> object has an internal link to another object, which can be retrieved by its <code>__proto__</code> property. This internal linking does all the magic which enables the inheritance in JavaScript. <code>__proto__</code> of Animal.prototype points to another object which is nothing but the <code>Object.prototype</code>.</li>
+<li>Since <code>Object</code> and <code>Animal</code> both are javascript functions and also an object of global function <code>Function</code>, both have internal link <code>__proto__</code> which points to <code>Function.prototype</code>.</li>
+<li><code>__proto__</code> property of <code>Object.prototype</code> points to null.</li>
+<li><code>null</code> object is where the inheritance chain ends.</li>
+<li>For each function call like <code>new Animal()</code>, a new object will be created and all such objects will have the internal link <code>__proto__</code> to Animal.prototype.</li>
+<li>Finally where does <code>Function.__proto__</code> link points to? well it points to the same object which <code>Function.prototype</code> points to.</li>
+</ol>
+<p><strong>Note:</strong> Use of <strong>proto</strong> is debatable because it was not originally included in the ECMASCRIPT specification but in ECMASCRIPT 6 it has been included in the specification and has been standardized. There are other ways we can access the link object, I’ll mention those methods later in this article.</p>
+<p>When we create a new object of function <code>Animal</code> using <code>new Animal()</code>, then a new empty object is created and <code>Animal.prototype</code> is set to its internal link <code>__proto__</code>.</p>
+<h2 id="What’s-the-Deal-with-Internal-Link-“proto“"><a href="#What’s-the-Deal-with-Internal-Link-“proto“" class="headerlink" title="What’s the Deal with Internal Link “proto“?"></a>What’s the Deal with Internal Link “<strong>proto</strong>“?</h2><p>The internal link <code>__proto__</code> we have seen above does all the magic called Prototypal inheritance in JavaScript. When we try to access any property (or method) of an object in JavaScript, then JavaScript walks through the entire chain of objects using internal link <code>__proto__</code> to find that property, till it finds the property in any of the objects or reaches the “null” object.</p>
+<p>In prototypal inheritance object inherit properties from object dynamically this is different from classical inheritance where Classes (blueprints of objects) inherit from other Classes.</p>
+<p>That’s a very powerful feature of JavaScript and that makes it so cool.</p>
+<p>Let’s take another example:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Person = <span class="function"><span class="keyword">function</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Person.prototype.age = <span class="number">24</span>;</span><br><span class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person(<span class="string">"Mike"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>In the above piece of code, we have created a simple constructor function “Person”. Theoretically, any function in JavaScript can act like a constructor function and by convention, we name constructor functions starting with a capital letter. However constructor functions are only useful if they are written in a certain way. I’ll discuss more about them later in this article.</p>
+<p>We add *”age”* property to functions prototype. Next let’s create an object of this function using new keyword *”person1”*, and print out all the properties of <code>person1</code> using the following piece of code:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> p <span class="keyword">in</span> person1) &#123;</span><br><span class="line">    <span class="keyword">if</span> (person1.hasOwnProperty(p)) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(p);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Output or the above code is *”name”* unsurprisingly.<br>So we can see we have only *”name”* property in <code>person1</code> object. Let’s run the following piece of code.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(person1.age);?</span><br></pre></td></tr></table></figure>
+
+<p>And we can see it does print out 24, so even though person1 object does not have <code>age</code> property, we can still access its value because its prototype has that property.</p>
+<p>Accessing any Object’s Prototype<br>As shown earlier, you can access it using <code>__proto__</code> property.<br>You can also access any objects prototype using <code>Object.getPrototypeOf</code> method like:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> Person(<span class="string">"Hussey"</span>);</span><br><span class="line"><span class="keyword">var</span> personProto = <span class="built_in">Object</span>.getPrototypeOf(person1);</span><br></pre></td></tr></table></figure>
+
+<p>Remember from the earlier discussion every function’s prototype has “constructor” property which points back to the function itself, and also we can access any object’s prototype’s property directly from object, utilizing these two facts we can access object’s prototype like:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">person2.constructor.prototype</span><br></pre></td></tr></table></figure>
+
+<h2 id="Creating-Custom-Inheritance-Chain-Using-Objects"><a href="#Creating-Custom-Inheritance-Chain-Using-Objects" class="headerlink" title="Creating Custom Inheritance Chain Using Objects"></a>Creating Custom Inheritance Chain Using Objects</h2><p>This is a pretty straight forward way of creating the inheritance, let’s create two objects x and y using object literals, and make x parent of y using <code>Object.setPortotypeOf</code> method, as shown in the code below:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = &#123; <span class="attr">name</span>: <span class="string">"Mike"</span> &#125;;</span><br><span class="line"><span class="keyword">var</span> y = &#123; <span class="attr">age</span>: <span class="number">27</span> &#125;;</span><br><span class="line"><span class="built_in">Object</span>.setPrototypeOf(y, x);</span><br></pre></td></tr></table></figure>
+
+<p>That’s all that is needed to create working inheritance from one object to another. Here object y is derived from object x.</p>
+<h2 id="Using-Constructor-Functions"><a href="#Using-Constructor-Functions" class="headerlink" title="Using Constructor Functions"></a>Using Constructor Functions</h2><p>Constructor functions are the normal JavaScript functions written in a certain way. Constructor functions are called using new keyword. When we call a constructor function using new, a new object is created and that object is passed to the function as its context (this). We can access any function’s context using this keyword, inside function’s body.</p>
+<p>In object orientated languages like C#, to create inheritance, a class (blueprint of an object) is derived from another class as opposed to the case we have seen in an earlier section where one object is derived from another object. We can mimic the similar classical inheritance in JavaScript using constructor functions. Let’s see how.</p>
+<p>Let’s take the classic example of Employee and Manager inheritance. Here Employee is parent and Manager is child. We will write a very simple constructor function which represents the blueprint of Employee object as shown below:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Employee = <span class="function"><span class="keyword">function</span> (<span class="params">organization</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.organization = organization;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Employee.prototype.getOrganization = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.organization);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Next, let’s create Manager constructor function, keeping in mind that it will be derived from Employee, we will pass Employee constructor function and its parameters as parameters of Manager function as shown below:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Manager = <span class="function"><span class="keyword">function</span> (<span class="params">department, parentArg1, parentFn</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.department = department;</span><br><span class="line">    parentFn.call(<span class="keyword">this</span>, parentArg1);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Manager.prototype.getDepartment = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.department);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>In the next step, we need to establish the prototypal relation between Employee and Manager functions. Based on our understanding from earlier discussion, we know that we need to set internal link (<strong>proto</strong>) from child function’s prototype to parent functions prototype, let’s write a helper method to do exactly that, as shown below:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">CreateInheritance</span>(<span class="params">child, parent</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> p <span class="keyword">in</span> parent) &#123;</span><br><span class="line">        <span class="keyword">if</span> (parent.hasOwnProperty(p)) &#123;</span><br><span class="line">            child[p] = parent[p];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> tempProto = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123; <span class="keyword">this</span>.constructor = child; &#125;;</span><br><span class="line">    tempProto.prototype = parent.prototype;</span><br><span class="line">    child.prototype = <span class="keyword">new</span> tempProto();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>In the next step, let’s use this utility function to actually create the relation and create an instance of Manager:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CreateInheritance(Manager, Employee);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> mgr = <span class="keyword">new</span> Manager(<span class="string">"HR"</span>, <span class="string">"A WonderFull Company"</span>, Employee);</span><br></pre></td></tr></table></figure>
+
+<p>Now mgr object inherits properties and behavior from the Employee and Manager both and you can access those as if they belong to the object itself.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>As you can see, it’s not very intuitive and seems to be quite a lot of work to make classical inheritance work in JavaScript, but it’s certainly possible. Also ECMASCRIPT6 specifications does introduce concept of class in JavaScript however it’s just a syntactic sugar and the internal working still remains the same. JavaScript’s support of prototypal inheritance is one of the greatest features of it, and it certainly helps to know how exactly it works.</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Prototypal-Inheritance"><span class="toc-number">2.</span> <span class="toc-text">Prototypal Inheritance</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What’s-the-Deal-with-Internal-Link-“proto“"><span class="toc-number">3.</span> <span class="toc-text">What’s the Deal with Internal Link “proto“?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Creating-Custom-Inheritance-Chain-Using-Objects"><span class="toc-number">4.</span> <span class="toc-text">Creating Custom Inheritance Chain Using Objects</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Using-Constructor-Functions"><span class="toc-number">5.</span> <span class="toc-text">Using Constructor Functions</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">6.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://twistedsoft.com/2015/03/17/prototypal-inheritance/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&text=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&title=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&is_video=false&description=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Prototypal inheritance in javascript&body=Check out this article: https://twistedsoft.com/2015/03/17/prototypal-inheritance/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&title=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&title=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&title=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&title=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&name=Prototypal inheritance in javascript&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://twistedsoft.com/2015/03/17/prototypal-inheritance/&t=Prototypal inheritance in javascript" target="_blank" rel="noopener"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2020
+    Nishant Chaturvedi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

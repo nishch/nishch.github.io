@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="In the world of microservices, REST over HTTP, is the most commonly deployed setup to enable them communicate with each other. Also JSON is probably the most popular messaging format used in this case">
+<meta property="og:type" content="article">
+<meta property="og:title" content="How to use protocol buffers with REST">
+<meta property="og:url" content="https://twistedsoft.com/2018/09/12/proto-with-rest/index.html">
+<meta property="og:site_name" content="TwistedSoft">
+<meta property="og:description" content="In the world of microservices, REST over HTTP, is the most commonly deployed setup to enable them communicate with each other. Also JSON is probably the most popular messaging format used in this case">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-09-12T11:30:00.000Z">
+<meta property="article:modified_time" content="2020-05-31T11:42:55.319Z">
+<meta property="article:author" content="Nishant Chaturvedi">
+<meta property="article:tag" content="Protobuf">
+<meta property="article:tag" content="Protocol Buffers">
+<meta property="article:tag" content="REST">
+<meta property="article:tag" content="HTTP">
+<meta property="article:tag" content="JSON">
+<meta property="article:tag" content="JavaScript">
+<meta property="article:tag" content="Node.js">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>How to use protocol buffers with REST</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="TwistedSoft" type="application/atom+xml" />
+    
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/09/25/grpc-client/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/05/17/react-ms-login/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://twistedsoft.com/2018/09/12/proto-with-rest/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&text=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&title=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&is_video=false&description=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=How to use protocol buffers with REST&body=Check out this article: https://twistedsoft.com/2018/09/12/proto-with-rest/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&title=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&title=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&title=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&title=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&name=How to use protocol buffers with REST&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://twistedsoft.com/2018/09/12/proto-with-rest/&t=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Sample-Project"><span class="toc-number">1.</span> <span class="toc-text">Sample Project</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#src-protobuf-catalog-proto"><span class="toc-number">2.</span> <span class="toc-text">src&#x2F;protobuf&#x2F;catalog.proto</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#src-common-protoResolver-js"><span class="toc-number">3.</span> <span class="toc-text">src&#x2F;common&#x2F;protoResolver.js</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#src-server-js"><span class="toc-number">4.</span> <span class="toc-text">src&#x2F;server.js</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#src-client-js"><span class="toc-number">5.</span> <span class="toc-text">src&#x2F;client.js</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">6.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        How to use protocol buffers with REST
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">TwistedSoft</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2018-09-12T11:30:00.000Z" itemprop="datePublished">2018-09-12</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>In the world of microservices, REST over HTTP, is the most commonly deployed setup to enable them communicate with each other. Also JSON is probably the most popular messaging format used in this case. Although such a setup works perfectly fine for most of the scenarios, there might be good reasons to look beyond, for examples in cases where microservices are too chatty, data size being transferred might start taxing too much on the overall performance.</p>
+<p>This article is about the alternative of JSON for such scenarios i.e. <code>Protobuf</code>. I am also assuming the basic familiarity with <code>Protobuf</code> (just knowing how to define message in protobuf is enough) and <code>Node.js</code>. You can find the protobuf reference <a href="https://developers.google.com/protocol-buffers/docs/proto#simple" target="_blank">here</a>. If you want to directly jump into the code, you can find that <a href="https://github.com/nishch/proto-with-rest-sample" target="_blank">proto-with-rest-sample</a>.</p>
+<h2 id="Sample-Project"><a href="#Sample-Project" class="headerlink" title="Sample Project"></a>Sample Project</h2><p>Sample project is build on <code>Node.js</code>. It shows a simple client/server example, where server implements the <code>GET</code> and <code>POST</code> endpoints for <code>Catalog</code> resource. Following is the project structure:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">|-- package-lock.json</span><br><span class="line">|-- package.json</span><br><span class="line">|-- src</span><br><span class="line">    |-- client.js</span><br><span class="line">    |-- common</span><br><span class="line">    |   |-- protoResolver.js</span><br><span class="line">    |-- protobuf</span><br><span class="line">    |  |-- catalog.proto</span><br><span class="line">    |-- server.js</span><br></pre></td></tr></table></figure>
+<p>Let’s see how these individual modules look like, one by one:</p>
+<h2 id="src-protobuf-catalog-proto"><a href="#src-protobuf-catalog-proto" class="headerlink" title="src/protobuf/catalog.proto"></a>src/protobuf/catalog.proto</h2><p>As you might have guessed, this proto file defines all the messages used in the app:</p>
+<figure class="highlight protobuf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">syntax = <span class="string">"proto3"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">package</span> catalog;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">Product</span> </span>&#123;</span><br><span class="line">    <span class="class"><span class="keyword">enum</span> <span class="title">Status</span> </span>&#123;</span><br><span class="line">        AVAILABLE = <span class="number">0</span>;</span><br><span class="line">        OUT_OF_STOCK = <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">int32</span> id = <span class="number">1</span>;</span><br><span class="line">    <span class="built_in">string</span> name = <span class="number">2</span>;</span><br><span class="line">    <span class="built_in">float</span> price = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">repeated</span> <span class="built_in">string</span> tags = <span class="number">4</span>;</span><br><span class="line">    <span class="built_in">int32</span> quantity = <span class="number">5</span>;</span><br><span class="line">    Status status = <span class="number">6</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">Catalog</span> </span>&#123;</span><br><span class="line">    <span class="keyword">repeated</span> Product products = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">enum</span> <span class="title">ApiStatus</span> </span>&#123;</span><br><span class="line">    UNKNOWN = <span class="number">0</span>;</span><br><span class="line">    SUCCESS = <span class="number">1</span>;</span><br><span class="line">    FAILED = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">GetCatalogResponse</span> </span>&#123;</span><br><span class="line">    ApiStatus status = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">repeated</span> Catalog catalogs = <span class="number">2</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">message</span> <span class="title">AddCatalogResponse</span> </span>&#123;</span><br><span class="line">    ApiStatus status = <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>Product</code> and <code>Catalog</code> structures are straight forward, the reason of choosing such structures was to accommodate different data types in the demo app.</p>
+<p><code>GetCatalogResponse</code> and <code>AddCatalogResponse</code> are the wrapper messages for <code>GET</code> and <code>POST</code> endpoints respectively.</p>
+<h2 id="src-common-protoResolver-js"><a href="#src-common-protoResolver-js" class="headerlink" title="src/common/protoResolver.js"></a>src/common/protoResolver.js</h2><p>This is a utility module, which allows us to load the proto files, and also provides helpers functions to <code>encode</code> and <code>decode</code> protobuf messages easily.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">"path"</span>);</span><br><span class="line"><span class="keyword">const</span> protobuf = <span class="built_in">require</span>(<span class="string">"protobufjs"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> PROTO_PATH = path.join(__dirname, <span class="string">"../protobuf/catalog.proto"</span>);</span><br><span class="line"><span class="keyword">let</span> _pkg;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_init</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        _pkg = protobuf.loadSync(PROTO_PATH);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (err) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"failed to load proto files"</span>, err);</span><br><span class="line">        process.exit(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * searches and returns a type in the loaded proto files</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;string&#125;</span> </span>messageType name of the type to resolve example: "Product", "Catalog"</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">resolveType</span>(<span class="params">messageType</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> resolved = _pkg.lookupTypeOrEnum(messageType);</span><br><span class="line">    resolved.resolveAll();</span><br><span class="line">    <span class="keyword">if</span> (resolved.resolved) &#123;</span><br><span class="line">        <span class="keyword">return</span> resolved;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Serializes plain js objects to Buffer which conforms to protobuf message</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;string&#125;</span> </span>messageType name of the type to resolve example: "Product", "Catalog"</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;object&#125;</span> </span>message js plain object which need to be serialized into protobuf buffers</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">encodeMessage</span>(<span class="params">messageType, message</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> messageProto = resolveType(messageType);</span><br><span class="line">    <span class="keyword">const</span> validationErr = messageProto.verify(message);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (validationErr) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(validationErr);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> messageProto.encode(messageProto.create(message)).finish();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Marshals Buffer to plain js objects</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;string&#125;</span> </span>messageType name of the type to resolve example: "Product", "Catalog"</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;Buffer|Uint8Array&#125;</span> </span>data buffer which needs to be deserialized</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">decodeMessage</span>(<span class="params">messageType, data</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> messageProto = resolveType(messageType);</span><br><span class="line">    <span class="keyword">const</span> parsed = messageProto.decode(data);</span><br><span class="line">    <span class="keyword">const</span> message = messageProto.toObject(parsed);</span><br><span class="line">    <span class="keyword">return</span> message;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">_init();</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">    resolveType,</span><br><span class="line">    encodeMessage,</span><br><span class="line">    decodeMessage</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>We are using <a href="https://www.npmjs.com/package/protobufjs" target="_blank">protobufjs</a> npm package to read the protobuf files. Within the <code>_init</code> method, this module loads the protobuf file when required the first time, and later on searches within the loaded proto definitions.</p>
+<h2 id="src-server-js"><a href="#src-server-js" class="headerlink" title="src/server.js"></a>src/server.js</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">"express"</span>);</span><br><span class="line"><span class="keyword">const</span> bodyParser = <span class="built_in">require</span>(<span class="string">"body-parser"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> protoResolver = <span class="built_in">require</span>(<span class="string">"./common/protoResolver"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> catalogs = [];</span><br><span class="line"><span class="keyword">const</span> PORT = <span class="number">7878</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/********* Handlers and middlewares ***********/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//creating a middleware which can do the protobuf message parsing would be nice</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">parseProto</span>(<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">    req.body = protoResolver.decodeMessage(<span class="string">"Catalog"</span>, req.body);</span><br><span class="line">    next();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getCatalogs</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> apiResponse = protoResolver.encodeMessage(<span class="string">"GetCatalogResponse"</span>, &#123;</span><br><span class="line">        status: <span class="number">1</span>,</span><br><span class="line">        catalogs</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    res.setHeader(<span class="string">"Content-Type"</span>, <span class="string">"application/octet-stream"</span>);</span><br><span class="line">    res.write(apiResponse);</span><br><span class="line">    res.end();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addCatalog</span>(<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> product = req.body;</span><br><span class="line">    catalogs.push(product);</span><br><span class="line">    <span class="keyword">const</span> apiResponse = protoResolver.encodeMessage(<span class="string">"AddCatalogResponse"</span>, &#123;</span><br><span class="line">        status: <span class="number">1</span></span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    res.setHeader(<span class="string">"Content-Type"</span>, <span class="string">"application/octet-stream"</span>);</span><br><span class="line">    res.write(apiResponse);</span><br><span class="line">    res.end();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/********************************/</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//define the express router, which allows as to segregate logical operations against one endpoint nicely </span></span><br><span class="line"><span class="keyword">const</span> router = express.Router();</span><br><span class="line">router.route(<span class="string">"/catalog"</span>)</span><br><span class="line">    .get(getCatalogs)</span><br><span class="line">    .post([parseProto, addCatalog]);</span><br><span class="line"></span><br><span class="line"><span class="comment">//create a express server app</span></span><br><span class="line"><span class="keyword">const</span> server = express();</span><br><span class="line"></span><br><span class="line"><span class="comment">//following is important, we do need raw request body stream, since we are gonna parse it ourselves</span></span><br><span class="line">server.use(bodyParser.raw());</span><br><span class="line">server.use(<span class="string">"/"</span>, router);</span><br><span class="line"></span><br><span class="line">server.listen(PORT, () =&gt; <span class="built_in">console</span>.log(<span class="string">"started listening on port"</span>, PORT));</span><br></pre></td></tr></table></figure>
+
+<p>Thing to note in the otherwise straightforward example are:</p>
+<ul>
+<li>we are using <code>server.use(bodyParser.raw());</code> to ensure we get the raw buffer from the <code>POST</code> requests.</li>
+<li><code>parseProto</code> is a handy middleware, which decodes the posted protobuf messages to plain js objects, which can be easily consumed in the request handlers.</li>
+<li>while sending the response bach, we set the content type to <code>application/octet-stream</code> to help client libraries understand that response should not be attempted to be parsed, rather will directly be dealt with in the client application.</li>
+<li>for the sake of simplicity, we are not using any databases, rather we simply store posted data in <code>const catalogs = [];</code>.</li>
+</ul>
+<h2 id="src-client-js"><a href="#src-client-js" class="headerlink" title="src/client.js"></a>src/client.js</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> axios = <span class="built_in">require</span>(<span class="string">"axios"</span>);</span><br><span class="line"><span class="keyword">const</span> protoResolver = <span class="built_in">require</span>(<span class="string">"./common/protoResolver"</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> CATALOG_ENDPOINT = <span class="string">"http://localhost:7878/catalog"</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addCatalog</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> catalog = &#123;</span><br><span class="line">        products: [&#123;</span><br><span class="line">            id: <span class="number">20</span>,</span><br><span class="line">            name: <span class="string">"Diamond Ring"</span>,</span><br><span class="line">            price: <span class="number">102.4</span>,</span><br><span class="line">            quantity: <span class="number">2</span>,</span><br><span class="line">            tags: [<span class="string">"jewel"</span>],</span><br><span class="line">            status: <span class="number">1</span></span><br><span class="line">        &#125;]</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> catalogProto = protoResolver.resolveType(<span class="string">"Catalog"</span>);</span><br><span class="line">    <span class="keyword">const</span> validationErr = catalogProto.verify(catalog);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (validationErr) &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">"invalid message, error:"</span>, validationErr);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> data = catalogProto.encode(catalogProto.create(catalog)).finish();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> axios.post(CATALOG_ENDPOINT, data, &#123;</span><br><span class="line">            headers: &#123;</span><br><span class="line">                <span class="string">"Content-Type"</span>: <span class="string">"application/octet-stream"</span></span><br><span class="line">            &#125;,</span><br><span class="line">            responseType: <span class="string">'arraybuffer'</span></span><br><span class="line">        &#125;)</span><br><span class="line">        .then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">const</span> apiResponse = protoResolver.decodeMessage(<span class="string">"AddCatalogResponse"</span>, res.data);</span><br><span class="line">            <span class="built_in">console</span>.log(apiResponse);</span><br><span class="line">        &#125;)</span><br><span class="line">        .catch(<span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(err);</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">getCatalog</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> axios.get(CATALOG_ENDPOINT, &#123;</span><br><span class="line">            responseType: <span class="string">'arraybuffer'</span></span><br><span class="line">        &#125;)</span><br><span class="line">        .then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="keyword">const</span> apiResponse = protoResolver.decodeMessage(<span class="string">"GetCatalogResponse"</span>, res.data);</span><br><span class="line">            <span class="built_in">console</span>.log(apiResponse);</span><br><span class="line">        &#125;)</span><br><span class="line">        .catch(<span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(err);</span><br><span class="line">        &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">_init</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    addCatalog();</span><br><span class="line">    getCatalog();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">_init();</span><br></pre></td></tr></table></figure>
+
+<p>we are using <code>axios</code> npm package to make HTTP calls. Some points to note in the above example:</p>
+<ul>
+<li>we set <code>responseType: &#39;arraybuffer&#39;</code>, which sets <code>Accept</code> http header in the requests, this is important otherwise you will get an empty <code>res.Data</code>.</li>
+<li>while making the post request, we set content type to <code>application/octet-stream</code>.</li>
+</ul>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>As you can see, we can replace <code>JSON</code> with <code>Protobuf</code> almost as easily. Data size reduction when using <code>Protobuf</code>, is higher even with <code>gzip</code> compression enabled while using <code>JSON</code>. If you do decide to use <code>Protobuf</code>, hopefully this sample will help you get started.</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Sample-Project"><span class="toc-number">1.</span> <span class="toc-text">Sample Project</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#src-protobuf-catalog-proto"><span class="toc-number">2.</span> <span class="toc-text">src&#x2F;protobuf&#x2F;catalog.proto</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#src-common-protoResolver-js"><span class="toc-number">3.</span> <span class="toc-text">src&#x2F;common&#x2F;protoResolver.js</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#src-server-js"><span class="toc-number">4.</span> <span class="toc-text">src&#x2F;server.js</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#src-client-js"><span class="toc-number">5.</span> <span class="toc-text">src&#x2F;client.js</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">6.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://twistedsoft.com/2018/09/12/proto-with-rest/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&text=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&title=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&is_video=false&description=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=How to use protocol buffers with REST&body=Check out this article: https://twistedsoft.com/2018/09/12/proto-with-rest/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&title=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&title=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&title=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&title=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://twistedsoft.com/2018/09/12/proto-with-rest/&name=How to use protocol buffers with REST&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://twistedsoft.com/2018/09/12/proto-with-rest/&t=How to use protocol buffers with REST" target="_blank" rel="noopener"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2020
+    Nishant Chaturvedi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

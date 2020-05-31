@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="In one of the recent projects I had a requirement to do integration with Microsoft Office365 Calendar Api and for that I needed to implement Microsoft login in a react.js app. I tried to search for a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Implement microsoft login in a react app">
+<meta property="og:url" content="https://twistedsoft.com/2017/05/17/react-ms-login/index.html">
+<meta property="og:site_name" content="TwistedSoft">
+<meta property="og:description" content="In one of the recent projects I had a requirement to do integration with Microsoft Office365 Calendar Api and for that I needed to implement Microsoft login in a react.js app. I tried to search for a">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2017-05-17T12:30:00.000Z">
+<meta property="article:modified_time" content="2020-05-31T11:43:05.160Z">
+<meta property="article:author" content="Nishant Chaturvedi">
+<meta property="article:tag" content="OAuth">
+<meta property="article:tag" content="Office365 Login">
+<meta property="article:tag" content="Outlook Login">
+<meta property="article:tag" content="React.js">
+<meta property="article:tag" content="Web Development">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>Implement microsoft login in a react app</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="TwistedSoft" type="application/atom+xml" />
+    
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2018/09/12/proto-with-rest/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/04/01/google-home-bot/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://twistedsoft.com/2017/05/17/react-ms-login/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://twistedsoft.com/2017/05/17/react-ms-login/&text=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://twistedsoft.com/2017/05/17/react-ms-login/&title=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://twistedsoft.com/2017/05/17/react-ms-login/&is_video=false&description=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Implement microsoft login in a react app&body=Check out this article: https://twistedsoft.com/2017/05/17/react-ms-login/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://twistedsoft.com/2017/05/17/react-ms-login/&title=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://twistedsoft.com/2017/05/17/react-ms-login/&title=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://twistedsoft.com/2017/05/17/react-ms-login/&title=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://twistedsoft.com/2017/05/17/react-ms-login/&title=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://twistedsoft.com/2017/05/17/react-ms-login/&name=Implement microsoft login in a react app&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://twistedsoft.com/2017/05/17/react-ms-login/&t=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Registration"><span class="toc-number">1.</span> <span class="toc-text">Registration</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Install-package"><span class="toc-number">2.</span> <span class="toc-text">Install package</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#How-to-use"><span class="toc-number">3.</span> <span class="toc-text">How to use?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#authComplete"><span class="toc-number">4.</span> <span class="toc-text">authComplete</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">5.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Implement microsoft login in a react app
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">TwistedSoft</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2017-05-17T12:30:00.000Z" itemprop="datePublished">2017-05-17</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>In one of the recent projects I had a requirement to do integration with <a href="https://msdn.microsoft.com/en-us/office/office365/api/calendar-rest-operations" target="_blank">Microsoft Office365 Calendar Api</a> and for that I needed to implement Microsoft login in a react.js app. I tried to search for a readily available <code>npm</code> package which I could consume easily and which fits nicely in the react ecosystem, but unfortunately I couldn’t find any so I decided to write my own.</p>
+<p>Hoping that this might be useful to someone else as well, I also published it <a href="https://www.npmjs.com/package/react-ms-login" target="_blank">react-ms-login</a> on <code>npm</code>. Read on to know how to use it.</p>
+<h2 id="Registration"><a href="#Registration" class="headerlink" title="Registration"></a>Registration</h2><p>Before we start writing any code, we need to obtain application Id (or client id) by registering our app in <a href="https://apps.dev.microsoft.com" target="_blank">Microsoft App Dev Center</a>. While registering make sure you add <code>web</code> platform under the <code>platforms</code> section. Also provide a valid redirectUri. Redirect URI is essentially an HTTP endpoint where Microsoft Authorization Server will redirect OAuth agent (i.e browser) after successful login. In this case redirectUri is the path of an html file residing on your web server, for example <code>http://localhost:9999/authComplete.html</code>. Don’t worry about the content of this HTML file just yet, it’s mentioned next in the step 4.</p>
+<p>Select appropriate scopes from the <code>Delegated Permissions</code> Section, A full list of all the valid <code>scopes</code> is present <a href="https://developer.microsoft.com/en-us/graph/docs/concepts/permissions_reference" target="_blank">here</a>. Keep a note of these. You will need this information while using the <code>react-ms-login</code>. Now after setup part out of our way, let’s put this info to good use and create a simple example.</p>
+<h2 id="Install-package"><a href="#Install-package" class="headerlink" title="Install package"></a>Install package</h2><p>Install the package via</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install react-ms-login --save</span><br></pre></td></tr></table></figure>
+
+<h2 id="How-to-use"><a href="#How-to-use" class="headerlink" title="How to use?"></a>How to use?</h2><p>We will create a simple react app, as shown below, which renders the Microsoft login button.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">"react"</span>;</span><br><span class="line"><span class="keyword">import</span> ReactDOM <span class="keyword">from</span> <span class="string">"react-dom"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> ReactLoginMS <span class="keyword">from</span> <span class="string">"react-ms-login"</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ButtonContent</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span> </span>&#123;</span><br><span class="line">    render()&#123;</span><br><span class="line">        <span class="keyword">return</span> (</span><br><span class="line">        &lt;span&gt;</span><br><span class="line">            MS Login</span><br><span class="line">        &lt;<span class="regexp">/span&gt;)</span></span><br><span class="line"><span class="regexp">    &#125;</span></span><br><span class="line"><span class="regexp">&#125;</span></span><br><span class="line"><span class="regexp"></span></span><br><span class="line"><span class="regexp">ReactDOM.render(&lt;ReactLoginMS</span></span><br><span class="line"><span class="regexp">    clientId="a157e2ad-7d43-4478-9051-541fd1b2023f" /</span><span class="regexp">/ required: 'application id/</span>client id<span class="string">' obtained from https://apps.dev.microsoft.com for your app</span></span><br><span class="line"><span class="string">    redirectUri="http://localhost:9999/authComplete.html" // required: redirectUri registered in https://apps.dev.microsoft.com for your app</span></span><br><span class="line"><span class="string">    scopes=&#123;["user.read"]&#125; //optional: defaults to "user.read" full list is present https://developer.microsoft.com/en-us/graph/docs/concepts/permissions_reference</span></span><br><span class="line"><span class="string">    responseType="token" //optional: valid values are "token" for `Implicite OAuth flow` and "code" for `Authorization Code flow` defaults to "token"</span></span><br><span class="line"><span class="string">    cssClass="some-css-class" // optional: space separated class names which are applied on the html Button element</span></span><br><span class="line"><span class="string">    btnContent=&#123;ButtonContent&#125; // optional: can be string or a valid react component which can be rendered inside html Button element</span></span><br><span class="line"><span class="string">    handleLogin=&#123;(data) =&gt; console.log(data)&#125;// required: callback to receive token/code after successful login</span></span><br><span class="line"><span class="string">/&gt;, document.getElementById("app"));</span></span><br></pre></td></tr></table></figure>
+<p>as you can see in the code above, <code>react-ms-login</code> component takes few parameters which you can pass using attributes. Comment against each parameter gives more information about it. <code>handleLogin</code> attribute takes a callback function which will be called after successful login, passing all the information obtained from Microsoft Authorizatio server. This information will depend upon the value passed from <code>responseType</code> parameter. Make sure you provide the same redirectUri which you have provided while registering your app.</p>
+<p>In order to style the render login button you can provide the css classes in the <code>cssClass</code> attribute, if you need to pass more than one class just separate them by space.</p>
+<p>You can also change the content of Button element, it can be any text or a valid React component which can be rendered inside Button html element property. Use <code>btnContent</code> for this.</p>
+<p><code>responseType</code> parameter allows you to obtain either authorization token, if you pass “token” as it’s value, or authorization code if you pass “code” as it’s value. If nothing is provided it defaults to “token”.</p>
+<h2 id="authComplete"><a href="#authComplete" class="headerlink" title="authComplete"></a>authComplete</h2><p>Last step to make all this work is to actually create a valid HTTP resource against the redirectUri you have setup while registering the app.</p>
+<p>Create the html file with the correct name and in the correct location in you web server, based on the redirectUri. For example in this case since we have configured redirectUri as <code>http://localhost:9999/authComplete.html</code>, that means we need <code>authComplete.html</code> file at the root of the server. You can of course choose any path in your server, just make sure <code>redirectUri</code> reflects that path correctly.</p>
+<p>Content of authComplete.html is shown below.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"dist/react-ms-login.min.js"</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line">        ReactLoginMS.authComplete();</span><br><span class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line">    </span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>first script reference points to <code>react-ms-login.min.js</code>, make sure you copy this file from the <code>dist</code> directory of <code>react-ms-login</code> package and put it in your server where it’s accessible and then change the script src to reflect the path.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>If you have followed all the steps correctly, then at this point you will have a working “Microsoft Login” implementation.</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Registration"><span class="toc-number">1.</span> <span class="toc-text">Registration</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Install-package"><span class="toc-number">2.</span> <span class="toc-text">Install package</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#How-to-use"><span class="toc-number">3.</span> <span class="toc-text">How to use?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#authComplete"><span class="toc-number">4.</span> <span class="toc-text">authComplete</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">5.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://twistedsoft.com/2017/05/17/react-ms-login/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://twistedsoft.com/2017/05/17/react-ms-login/&text=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://twistedsoft.com/2017/05/17/react-ms-login/&title=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://twistedsoft.com/2017/05/17/react-ms-login/&is_video=false&description=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Implement microsoft login in a react app&body=Check out this article: https://twistedsoft.com/2017/05/17/react-ms-login/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://twistedsoft.com/2017/05/17/react-ms-login/&title=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://twistedsoft.com/2017/05/17/react-ms-login/&title=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://twistedsoft.com/2017/05/17/react-ms-login/&title=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://twistedsoft.com/2017/05/17/react-ms-login/&title=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://twistedsoft.com/2017/05/17/react-ms-login/&name=Implement microsoft login in a react app&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://twistedsoft.com/2017/05/17/react-ms-login/&t=Implement microsoft login in a react app" target="_blank" rel="noopener"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2020
+    Nishant Chaturvedi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>

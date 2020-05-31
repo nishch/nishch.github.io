@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Just by simply looking at the title, an obvious question might come up in your mind, life is so beautiful with REST over HTTP&#x2F;1.1, why are we even talking about changing it? In order to address this q">
+<meta property="og:type" content="article">
+<meta property="og:title" content="A comparison between http&#x2F;1.1 and http&#x2F;2">
+<meta property="og:url" content="https://twistedsoft.com/2017/03/13/http2/index.html">
+<meta property="og:site_name" content="TwistedSoft">
+<meta property="og:description" content="Just by simply looking at the title, an obvious question might come up in your mind, life is so beautiful with REST over HTTP&#x2F;1.1, why are we even talking about changing it? In order to address this q">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.dropbox.com/s/czciglm7tbyb56g/HOL.png?raw=1">
+<meta property="og:image" content="https://www.dropbox.com/s/swrt9xvrcmpy7nv/http2-con.png?raw=1">
+<meta property="article:published_time" content="2017-03-13T15:30:00.000Z">
+<meta property="article:modified_time" content="2020-05-31T11:42:50.602Z">
+<meta property="article:author" content="Nishant Chaturvedi">
+<meta property="article:tag" content="http2">
+<meta property="article:tag" content="http&#x2F;2">
+<meta property="article:tag" content="spdy">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.dropbox.com/s/czciglm7tbyb56g/HOL.png?raw=1">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>A comparison between http/1.1 and http/2</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+      
+<link rel="stylesheet" href="/css/rtl.css">
+
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="TwistedSoft" type="application/atom+xml" />
+    
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+        
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" href="/2017/03/16/express-http2/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" href="/2017/02/09/tiny-config/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://twistedsoft.com/2017/03/13/http2/" target="_blank" rel="noopener"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://twistedsoft.com/2017/03/13/http2/&text=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://twistedsoft.com/2017/03/13/http2/&title=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://twistedsoft.com/2017/03/13/http2/&is_video=false&description=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=A comparison between http/1.1 and http/2&body=Check out this article: https://twistedsoft.com/2017/03/13/http2/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://twistedsoft.com/2017/03/13/http2/&title=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://twistedsoft.com/2017/03/13/http2/&title=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://twistedsoft.com/2017/03/13/http2/&title=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://twistedsoft.com/2017/03/13/http2/&title=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://twistedsoft.com/2017/03/13/http2/&name=A comparison between http/1.1 and http/2&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://twistedsoft.com/2017/03/13/http2/&t=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-1-1"><span class="toc-number">1.</span> <span class="toc-text">HTTP&#x2F;1.1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-2"><span class="toc-number">2.</span> <span class="toc-text">HTTP&#x2F;2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What-does-it-change-for-the-Web-Developers"><span class="toc-number">3.</span> <span class="toc-text">What does it change for the Web Developers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">4.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        A comparison between http/1.1 and http/2
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">TwistedSoft</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2017-03-13T15:30:00.000Z" itemprop="datePublished">2017-03-13</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <p>Just by simply looking at the title, an obvious question might come up in your mind, life is so beautiful with REST over HTTP/1.1, why are we even talking about changing it? In order to address this question, let’s take a step back to see how things have changed over the years in the software world.</p>
+<p> The original design goal of HTTP was to be a protocol which can facilitate a document retrieval system for the web. The widely deployed and most prevalent HTTP version (i.e. HTTP/1.1), came to life in 1997, that was 20 years back. So much has changed on the web since then and it’s very far from what it used to be at that time. Average page size has quadrupled in these year and we have started building all sorts of crazy things using web and REST over HTTP.</p>
+<h2 id="HTTP-1-1"><a href="#HTTP-1-1" class="headerlink" title="HTTP/1.1"></a>HTTP/1.1</h2><p> Although HTTP/1.1 has served us well for so many years, it definitely not the most efficient way to build modern systems. Some of the drawbacks with using HTTP/1.1 are:</p>
+<ol>
+<li><p><strong>TCP Slow Start:</strong> HTTP is an application layer protocol and it relies on TCP to manage connections and reliable message delivery. TCP itself carries some bagage with it’s design to ensure reliability and optimal network usage:</p>
+<ol>
+<li>Three way handshake, which happens at the start of the TCP connection and involves 3 packets (SYN-SYN+ACK-ACK) exchange between both the ends of the connections.</li>
+<li>To avoid overwhelming the network with too many packets causing network noice, instead of bombarding the network with the full capacity of network adaptor, number of packets are slowly increased to reach to the optimal level. </li>
+</ol>
+<p>This is an over simplification, exact implementation is quite involved but not important for this discussion. The point being highlighted here is creating a TCP connection is a costly affair, if done too frequently or too many times.</p>
+</li>
+</ol>
+<ol start="2">
+<li><p><strong>Per Domain max connection limit:</strong> Browsers typically impose a limit on the max number of connection a web app can open to the same domain. The actual number varies based on the browser, but it’s somewhere in the range 6-10 connections. Once again the point being made is too many HTTP requests, involve too many connections which result in the waiting period because of this limit.</p>
+</li>
+<li><p><strong>Request Pipelining and Head of the Line Blocking:</strong> HTTP/1.1 allows clients to pipeline multiple request on the same connection, without fully receiving the response for the first request. Now this might sound a big improvement but in reality it has issues. What if the first request sent in the pipeline take way too much time for the server to respond? In that case even though client has promptly sent several requests in the pipeline, it’s of not much use since the whole pipeline is being blocked by the request which is taking too much time. This behavior is called “Head Of The Line Blocking”.</p>
+</li>
+</ol>
+<p><img src="https://www.dropbox.com/s/czciglm7tbyb56g/HOL.png?raw=1" alt="HOL"></p>
+<ol start="4">
+<li><p><strong>HTTP Headers:</strong> HTTP headers are verbose, repetitive and eat up a lot of bandwidth being shuttled back and forth alongwith each request. This is undoubtedly sub-optimal.</p>
+</li>
+<li><p><strong>Text Based Protocol:</strong> HTTP protocol is text based, it means while parsing the request we need to check and wait for the separators/de-limiters as opposed to binary protocol where we can do the parsing using mem-copies and byte counts. Text based parsing is quite slow as compared to binary</p>
+</li>
+<li><p><strong>No Two Way Communication:</strong> HTTP works on request/response model, where client opens the connection, request a resource and receives the response. There is no built in way for servers to send messages without clients asking for it. To achieve this currently we resort to WebSockets/Long Polling/Server Sent Events/Forever frames or similar methods, and most of them are nothing more than a hack.</p>
+</li>
+</ol>
+<h2 id="HTTP-2"><a href="#HTTP-2" class="headerlink" title="HTTP/2"></a>HTTP/2</h2><p>HTTP/2 standard got finalised in 2015, so it’s been close to two years already since it came to life.</p>
+<p>All the major browsers are already supporting HTTP/2, a substantial part of the web we interact with on the daily basis is already using HTTP/2. Let’s see what it is and what it offers.</p>
+<p>HTTP/2 solves all the problems mentioned above:</p>
+<ol>
+<li><p><strong>Binary Frame Based Protocal:</strong> It is a binary protocol, where the smallest logical unit on the wire is called a <code>frame</code>. A frame typically has a header section and an optional payload section. header section carries the type, flags, stream identifier and lengh information. Some of the important frame types are: <em>Header Frames</em>, <em>Data Frames</em> and <em>Setting Frames</em>.</p>
+</li>
+<li><p><strong>Enforces SSL/TLS:</strong> HTTP/2 is an upgrade protocol, that means the communication/handshake starts with a different protocol and then upgrades to HTTP/2. There are two ways this upgrade can happen:</p>
+<ol>
+<li><p><em>ALPN (Application Layer Protocol Nagotiation):</em> In this case, handshake happens on SSL/TLS layer, where <code>h2</code> protocol is send to the other party in the <code>ALPN</code> extenstion of TLS. This is what’s supported by most of the browser, hence if you want to use HTTP/2 then you have to use SSL/TLS.</p>
+</li>
+<li><p><em>h2c:</em> There is another clear text version of protocol upgrade mechanism. In this case handshake information is sent in HTTP/1.1 <code>upgrade</code> headers. Most browsers do not support this and might not be supporting it even in future.</p>
+</li>
+</ol>
+</li>
+<li><p><strong>Streaming and Multiplexing:</strong> One connection can be used to multiplex several requests/response in parallel using streams. Each request/response can be mapped to a stream which is composed by multiple frames and each frame has the stream identifiers associated with them. This allows both ends of the connection to interleave frames from different streams, which avoids the Head Of the Line blocking issue.</p>
+</li>
+</ol>
+<p><img src="https://www.dropbox.com/s/swrt9xvrcmpy7nv/http2-con.png?raw=1" alt="http2-con"></p>
+<ol start="4">
+<li><p><strong>HPACK Headers Compression:</strong> We are familiar with the gZip compression for the request body, but HTTP/2 also enables compression on the HTTP headers using <code>HPACK</code>. This is really cool.</p>
+</li>
+<li><p><strong>Two Way Communication and Server Push:</strong> HTTP/2 enables servers to send data to clients without clients asking for it, using <code>PUSH PROMISE</code> frames. This is useful in scenarios like HTML pages which have stylesheets and JavaScript file references, which can be send by the server directly after request has been made for the host HTML page, since there is a great possibility that client asking for the HTML page might will also need various referenced resources. This also means that <code>websockets</code> might not be as cool as they are currently, probably it’s too soon to say this, only time will tell.</p>
+</li>
+</ol>
+<h2 id="What-does-it-change-for-the-Web-Developers"><a href="#What-does-it-change-for-the-Web-Developers" class="headerlink" title="What does it change for the Web Developers"></a>What does it change for the Web Developers</h2><p>Not much actually, since HTTP/2 still follows the exact same semantics as HTTP/1.1, in fact as far as your application is concerned, it’s still dealing with the same HTTP request verbs/headers and what not.</p>
+<p>What it does going to change is <code>PERFORMACE</code>, it’s like just turning the nob to tap out the performance. Also some of the best practices (or hacks) like image spriting, concatenating style, js files, inlining etc might not yield into a different result.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Migrate to HTTP/2 as soon as you possibly can, it’s has only good things to offer without you putting in too much effort.</p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-1-1"><span class="toc-number">1.</span> <span class="toc-text">HTTP&#x2F;1.1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-2"><span class="toc-number">2.</span> <span class="toc-text">HTTP&#x2F;2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What-does-it-change-for-the-Web-Developers"><span class="toc-number">3.</span> <span class="toc-text">What does it change for the Web Developers</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conclusion"><span class="toc-number">4.</span> <span class="toc-text">Conclusion</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://twistedsoft.com/2017/03/13/http2/" target="_blank" rel="noopener"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://twistedsoft.com/2017/03/13/http2/&text=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://twistedsoft.com/2017/03/13/http2/&title=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://twistedsoft.com/2017/03/13/http2/&is_video=false&description=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=A comparison between http/1.1 and http/2&body=Check out this article: https://twistedsoft.com/2017/03/13/http2/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://twistedsoft.com/2017/03/13/http2/&title=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://twistedsoft.com/2017/03/13/http2/&title=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://twistedsoft.com/2017/03/13/http2/&title=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://twistedsoft.com/2017/03/13/http2/&title=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://twistedsoft.com/2017/03/13/http2/&name=A comparison between http/1.1 and http/2&description=" target="_blank" rel="noopener"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://news.ycombinator.com/submitlink?u=https://twistedsoft.com/2017/03/13/http2/&t=A comparison between http/1.1 and http/2" target="_blank" rel="noopener"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2015-2020
+    Nishant Chaturvedi
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/archives/">Articles</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+
+    <!-- jquery -->
+
+<script src="/lib/jquery/jquery.min.js"></script>
+
+
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+
+<!-- clipboard -->
+
+  
+<script src="/lib/clipboard/clipboard.min.js"></script>
+
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+
+</body>
+</html>
